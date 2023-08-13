@@ -5,5 +5,5 @@ public class Main {
         System.out.println("Hello world!");
     }
 
-    private int zero = 0;
+    private int zero = 10;
 }
