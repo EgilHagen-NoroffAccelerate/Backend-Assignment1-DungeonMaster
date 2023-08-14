@@ -6,5 +6,5 @@ public class Main {
     }
 
     private int zero = 10;
-    private boolean feil = true;
+    private boolean feil = false;
 }
