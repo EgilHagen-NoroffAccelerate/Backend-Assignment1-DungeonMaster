@@ -77,4 +77,3 @@ The `ConsoleColors` class provides constants for styling console output with col
 The `Main` class is the entry point of the program. It initializes heroes, items, armor, and weapons, and demonstrates various interactions between them.
 
  
-MIT © 2023 Egil Hagen
