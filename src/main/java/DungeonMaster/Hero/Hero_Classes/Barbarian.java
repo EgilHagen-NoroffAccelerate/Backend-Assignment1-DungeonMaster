@@ -1,9 +1,10 @@
-package DungeonMaster.Hero.Classes;
+package DungeonMaster.Hero.Hero_Classes;
 
 import DungeonMaster.Hero.Hero;
 import DungeonMaster.Hero.HeroAttributes;
 import DungeonMaster.Items.Weapons.WeaponType;
 import DungeonMaster.Items.Armor.ArmorType;
+import static DungeonMaster.ConsoleColors.RED;
 
 public class Barbarian extends Hero {
 
@@ -12,7 +13,7 @@ public class Barbarian extends Hero {
     }
 
     @Override
-    protected void validEquipmentTypes() {
+    public void validEquipmentTypes() {
         validWeapons.add(WeaponType.Hatchets);
         validWeapons.add(WeaponType.Maces);
         validWeapons.add(WeaponType.Swords);
@@ -21,17 +22,23 @@ public class Barbarian extends Hero {
     }
 
     @Override
-    protected HeroAttributes getInitialAttributes(){
-        return new HeroAttributes(2,5,1);
-    }
-    @Override
-    protected HeroAttributes getAttributeGain() {
-        return new HeroAttributes(2, 3, 1);
+    public HeroAttributes getInitialAttributes(){
+        return new HeroAttributes(5,2,1);
     }
 
     @Override
-    protected int getDamagingAttribute() {
+    public HeroAttributes getAttributeGain() {
+        return new HeroAttributes(3, 2, 1);
+    }
+
+    @Override
+    public int getDamagingAttribute() {
         return totalAttributes().getStrength();
+    }
+
+    @Override
+    public String getThemeColor() {
+        return RED;
     }
 }
 

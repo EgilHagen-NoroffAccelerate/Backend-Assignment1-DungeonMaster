@@ -1,35 +1,40 @@
-package DungeonMaster.Hero.Classes;
+package DungeonMaster.Hero.Hero_Classes;
 
 import DungeonMaster.Hero.Hero;
 import DungeonMaster.Hero.HeroAttributes;
 import DungeonMaster.Items.Weapons.WeaponType;
 import DungeonMaster.Items.Armor.ArmorType;
+import static DungeonMaster.ConsoleColors.GREEN;
 
 public class Archer extends Hero {
     public Archer(String name) {
         super(name);
-        HeroAttributes initialAttributes = new HeroAttributes(1,1,1);
     }
 
     @Override
-    protected void validEquipmentTypes() {
+    public void validEquipmentTypes() {
         validWeapons.add(WeaponType.Bows);
         validArmor.add(ArmorType.Leather);
         validArmor.add(ArmorType.Mail);
     }
 
     @Override
-    protected HeroAttributes getInitialAttributes(){
-        return new HeroAttributes(7,1,1);
+    public HeroAttributes getInitialAttributes() {
+        return new HeroAttributes(1, 7, 1);
     }
 
     @Override
-    protected HeroAttributes getAttributeGain() {
-        return new HeroAttributes(5, 1, 1);
+    public HeroAttributes getAttributeGain(){
+        return new HeroAttributes(1, 5, 1);
     }
 
     @Override
-    protected int getDamagingAttribute() {
+    public int getDamagingAttribute() {
         return totalAttributes().getDexterity();
+    }
+
+    @Override
+    public String getThemeColor() {
+        return GREEN;
     }
 }

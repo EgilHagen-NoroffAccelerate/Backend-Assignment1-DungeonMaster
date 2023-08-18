@@ -1,20 +1,27 @@
 package DungeonMaster.Hero;
 
-import DungeonMaster.Items.Armor.Armor;
-import DungeonMaster.Items.Armor.ArmorType;
+
 import DungeonMaster.Items.Item;
 import DungeonMaster.Items.ItemSlot;
+
+import DungeonMaster.Items.Armor.Armor;
+import DungeonMaster.Items.Armor.ArmorType;
+
+import DungeonMaster.Items.Weapons.InvalidWeaponException;
+import DungeonMaster.Items.Armor.InvalidArmorException;
 import DungeonMaster.Items.Weapons.Weapon;
 import DungeonMaster.Items.Weapons.WeaponType;
 
 import java.util.*;
+
+import static DungeonMaster.ConsoleColors.RESET;
 
 
 public abstract class Hero {
     private final String name;
     private int level;
     private HeroAttributes levelAttributes;
-    private EnumMap<ItemSlot, Item> equipmentMap;
+    private Map<ItemSlot, Item> equipmentMap;
     protected List<WeaponType> validWeapons = new ArrayList<>();
     protected List<ArmorType> validArmor = new ArrayList<>();
 
@@ -22,57 +29,66 @@ public abstract class Hero {
     public Hero(String name){
         this.name = name;
         this.level = 1;
+        this.equipmentMap = new HashMap<>();
         this.levelAttributes = getInitialAttributes();
         validEquipmentTypes();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getLevel(){
+        return level;
+    }
+
+    public Map<ItemSlot, Item> getEquipmentMap() {
+        return equipmentMap;
+    }
+
     public void levelUp(){
         level++;
-        levelAttributes = levelAttributes.add(getAttributeGain());
+        levelAttributes.add(getAttributeGain());
     }
 
-    public void equip(Item item){
-        ItemSlot slot = item.getSlot();
-        if (equipmentMap.containsKey(slot)){
-            equipmentMap.put(slot, item);
-        } else {
-            throw  new IllegalArgumentException("Not an ItemSlot!");
+    public void equip(Weapon weapon) throws InvalidWeaponException {
+        if (!validWeapons.contains(weapon.getWeaponType())) {
+            throw new InvalidWeaponException("ILLEGAL ACTION: This hero doesn't know how to wield this type of weapon");
         }
-
-    }
-    public void equipWeapon(Weapon weapon) {
-        if (validWeapons.contains(weapon.getWeaponType())) {
-            equip(weapon);
-        } else {
-            throw new IllegalArgumentException(name + " can not carry that weapon");
+        if (weapon.getRequiredLevel() > level) {
+            throw new InvalidWeaponException("ILLEGAL ACTION: Weapon's required level is too high for this hero.");
         }
+        equipmentMap.put(ItemSlot.Weapon, weapon);
     }
 
-    public void equipArmor(Armor armor) {
-        if (validArmor.contains(armor.getArmorType())) { // Alt: validArmor.contains(((Armor) armor).getArmorType()))
-            equip(armor);
-        } else {
-            throw new IllegalArgumentException(name + " can not wear that armor");
+
+    public void equip(Armor armor) throws InvalidArmorException {
+        if (!validArmor.contains(armor.getArmorType())) {
+            throw new InvalidArmorException("ILLEGAL ACTION: Invalid armor type for this hero.");
         }
+        if (armor.getRequiredLevel() > this.level) {
+            throw new InvalidArmorException("ILLEGAL ACTION: Armor's required level is too high for this hero.");
+        }
+        equipmentMap.put(armor.getSlot(), armor);
     }
 
-    protected int getEquippedWeaponDamage() {
+    protected int getWeaponDamage() {
         Item equippedWeapon = equipmentMap.get(ItemSlot.Weapon);
         if (equippedWeapon instanceof Weapon) {
             return ((Weapon) equippedWeapon).getWeaponDamage();
         }
-        return 1; // Default weapon damage if no weapon equipped
+        return 1;
     }
 
-
-    public int damage() {
+    public double damage() {
         int damagingAttribute = getDamagingAttribute();
-        int weaponDamage = getEquippedWeaponDamage();
-        return (int) (weaponDamage * (1 + damagingAttribute / 100.0));
+        int weaponDamage = getWeaponDamage();
+        return (weaponDamage * (1 + damagingAttribute / 100.0));
     }
 
     public HeroAttributes totalAttributes() {
-        HeroAttributes totalAttributes = levelAttributes;
+        HeroAttributes totalAttributes = new HeroAttributes(levelAttributes.getStrength(), levelAttributes.getDexterity(), levelAttributes.getIntelligence());
+
         for (Item item : equipmentMap.values()) {
             if (item instanceof Armor) {
                 totalAttributes.add(((Armor) item).getArmorAttributes());
@@ -81,18 +97,29 @@ public abstract class Hero {
         return totalAttributes;
     }
 
-    public String display() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("name; ").append(name);
-        return stringBuilder.toString();
+    public void display() {
+        System.out.println(getThemeColor());
+        System.out.println("HERO NAME: " + getName());
+        System.out.println("HERO CLASS: " + getClass().getSimpleName());
+        System.out.println("HERO LEVEL: " + getLevel());
+        System.out.println("HERO STRENGTH: " + totalAttributes().getStrength());
+        System.out.println("HERO DEXTERITY: " + totalAttributes().getDexterity());
+        System.out.println("HERO INTELLIGENCE: " + totalAttributes().getIntelligence());
+        if (equipmentMap.containsKey(ItemSlot.Weapon)) {
+            System.out.println("HERO WEAPON: " + equipmentMap.get(ItemSlot.Weapon).getName());
+        }
+        System.out.println("HERO DAMAGE OUTPUT: " + damage());
+        System.out.println(RESET);
     }
 
-    protected abstract void validEquipmentTypes();
+    public abstract void validEquipmentTypes();
 
-    protected abstract HeroAttributes getInitialAttributes();
+    public abstract HeroAttributes getInitialAttributes();
 
-    protected abstract HeroAttributes getAttributeGain();
+    public abstract HeroAttributes getAttributeGain();
 
-    protected abstract int getDamagingAttribute();
+    public abstract int getDamagingAttribute();
+
+    public abstract String getThemeColor();
 
 }

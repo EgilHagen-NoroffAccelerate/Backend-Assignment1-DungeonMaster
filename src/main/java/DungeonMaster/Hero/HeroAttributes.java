@@ -1,16 +1,17 @@
 package DungeonMaster.Hero;
 
+import java.util.Objects;
+
 public class HeroAttributes {
     private int strength;
     private int dexterity;
     private int intelligence;
 
-    public  HeroAttributes(int dexterity, int strength, int intelligence){
-        this.dexterity = dexterity;
+    public  HeroAttributes(int strength, int dexterity, int intelligence){
         this.strength = strength;
+        this.dexterity = dexterity;
         this.intelligence = intelligence;
     }
-    //assertEquals wont work - need to override- generate "equalsandHashcode"
 
     public int getStrength() {
         return strength;
@@ -24,15 +25,23 @@ public class HeroAttributes {
         return intelligence;
     }
 
-    public HeroAttributes add(HeroAttributes other) {
-        return new HeroAttributes(strength += other.strength, dexterity += other.dexterity, intelligence += other.intelligence);
+    public void add(HeroAttributes addedValues) {
+        strength += addedValues.getStrength();
+        dexterity += addedValues.getDexterity();
+        intelligence += addedValues.getIntelligence();
     }
 
 
+    @Override
+    public boolean equals(Object other) {
+        HeroAttributes otherAttributes = (HeroAttributes) other;
+        return strength == otherAttributes.strength && dexterity == otherAttributes.dexterity && intelligence == otherAttributes.intelligence;
+    }
 
-    /* public int calculateTotal() {
-        return strength + dexterity + intelligence;
-    } */
+    @Override
+    public int hashCode() {
+        return Objects.hash(strength, dexterity, intelligence);
+    }
 }
 
 
