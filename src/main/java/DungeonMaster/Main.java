@@ -28,7 +28,7 @@ public class Main {
 
         Weapon archersBow = new Weapon("David Bowie", 1, WeaponType.Bows, 45);
         Weapon archersBow2 = new Weapon("Big bow", 10, WeaponType.Bows, 45);
-        Weapon wizardsStaff = new Weapon("Walking Stick", 4, WeaponType.Staffs, 50);
+        Weapon wizardsStaff = new Weapon("Walking Stick", 1, WeaponType.Staffs, 50);
         Weapon barbarianMace = new Weapon("Mace Windu", 4, WeaponType.Maces, 100);
         Weapon saber = new Weapon("Andúril", 4, WeaponType.Swords, 70);
 
@@ -37,50 +37,58 @@ public class Main {
         Armor archersHat = new Armor("Bucket hat", 1, ItemSlot.Head, ArmorType.Mail, new HeroAttributes(1,1,1));
         Armor robes = new Armor("Archmage's robes", 1, ItemSlot.Head, ArmorType.Cloth, new HeroAttributes(2,1,100));
 
-        Hero wizard2 = new Wizard("Harry Potter");
-        Weapon weapon = new Weapon("staff", 1, WeaponType.Staffs, 10);
 
+        System.out.println("Hero display");
+        barbarian.display();
+        swashbuckler.display();
         archer.display();
+        wizard.display();
 
+
+
+        System.out.println("Wizard equips weapon");
+        try {
+            wizard.equip(wizardsStaff);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        wizard.display();
+
+        System.out.println("Archer equips wrong armor");
         try {
             archer.equip(archersJacket);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        archer.display();
 
-
-        try {
-            wizard2.equip(weapon);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        wizard2.display();
-
+        System.out.println("Archer levels up");
         archer.levelUp();
+        archer.display();
 
+        System.out.println("Archer tries to equip armor again");
         try {
             archer.equip(archersJacket);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         archer.display();
 
+        System.out.println("Archer equips wrong weapon");
         try {
             archer.equip(wizardsStaff);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        archer.display();
 
+        System.out.println("Archer equips correct weapon");
         try {
             archer.equip(archersBow);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         archer.display();
 
-
     }
-
 }
